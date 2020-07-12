@@ -10,6 +10,10 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+app.get('/' , (req , res , next) => {
+    res.sendFile(path.join(__dirname + '/views/shop/default.html'));
+})
+
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 

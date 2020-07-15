@@ -1,10 +1,23 @@
 node {
+  def project = 'concise-hue-278020' 
+  def appName = 'onlineshopping-service'
+  def nameSpace='onlineshopping'
+  def cluster='onlineshopping-cluster'
+  def region='us-east1-d'
+  def feSvcName = "PROJECT-${appName}"
+  def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
   checkout scm
+  stage 'Build image'
+  sh("docker build -t ${imageTag} .")
+  stage 'Run node tests'
+  //sh("docker run ${imageTag} node test")
+  stage 'Skipping node tests'
+  stage 'Push image to registry'
+  sh("gcloud docker -- push ${imageTag}")
+  stage "Deploy Application"
+  sh("kubectl get ns onlineshopping || kubectl create ns onlineshopping")
+  sh("sed -i.bak 's#gcr.io/gcr-project/sample:1.0.0#${imageTag}#' ./k8s/${nameSpace}/*.yaml")
+  sh("kubectl --namespace=${nameSpace} apply -f k8s/services/")
+  sh("kubectl --namespace=${nameSpace} apply -f k8s/${nameSpace}/")
   
-  stage 'Stop and remove previous created image'
-  sh("docker stop demo-api || true && docker rm demo-api || true")
-  stage 'build new docker image'
-  sh("docker build -t demo-api:${BUILD_NUMBER} .")
-  stage 'run docker container on host machine'
-  sh("docker run -d -p 3000:3000 --name=demo-api demo-api:${BUILD_NUMBER}")
 }

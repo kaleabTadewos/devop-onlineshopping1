@@ -5,7 +5,7 @@ node {
   def cluster='onlineshopping-cluster'
   def region='us-east1-d'
   def feSvcName = "PROJECT-${appName}"
-  def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+  def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.5"
   checkout scm
   stage 'Build image'
   sh("docker build -t ${imageTag} .")

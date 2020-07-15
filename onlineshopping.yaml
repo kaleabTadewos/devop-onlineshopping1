@@ -1,0 +1,9 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: onlineshopping-ingress
+  namespace: onlineshopping
+spec:
+  backend:
+    serviceName: onlineshopping-service
+    servicePort: 3000

@@ -1,0 +1,59 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: onlineshoppingappstaging
+spec:
+  selector:
+    matchLabels:
+      app: onlineshopping-service
+      role: onlineshoppingrole
+  replicas: 2
+  template:
+    metadata:
+      name: onlineshopping-service
+      labels:
+        app: onlineshopping-service
+        role: onlineshoppingrole
+        env: staging
+    spec:
+      containers:
+      - name: onlineshopping
+        image: gcr.io/gcr-project/sample:1.0.0
+        env:
+          - name: onlineshopping_DB_URL
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: onlineshopping_DB_URL
+          - name: onlineshopping_PORT
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: onlineshopping_PORT
+          - name: onlineshopping_NODE_ENV
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: onlineshopping_NODE_ENV
+          - name: onlineshopping_SALT_FACTOR
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: onlineshopping_SALT_FACTOR
+          - name: onlineshopping_JWT_PRIVATEKEY
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: onlineshopping_JWT_PRIVATEKEY
+        resources:
+          limits:
+            memory: "1000Mi"
+            cpu: "150m"
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+        ports:
+        - name: onlineshopping
+          containerPort: 3000

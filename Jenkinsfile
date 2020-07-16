@@ -9,15 +9,10 @@ node {
   
   checkout scm
  // stage 'Build image'
-  stage('Initialize'){
-        def dockerHome = tool 'my-docker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
-  }
-
   sh("docker build -t ${imageTag} .")
 
   stage 'Run node tests'
-  //sh("docker run ${imageTag} node test")
+  sh("docker run ${imageTag} node test")
   stage 'Skipping node tests'
   stage 'Push image to registry'
   sh("gcloud docker -- push ${imageTag}")

@@ -7,8 +7,15 @@ node {
   def feSvcName = "PROJECT-${appName}"
   def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.5"
   checkout scm
-  stage 'Build image'
-  sh("docker build -t ${imageTag} .")
+ // stage 'Build image'
+ // sh("docker build -t ${imageTag} .")
+  stage('Build and push image with Container Builder') {
+      steps {
+        container('gcloud') {
+          sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
+        }
+      }
+    }
   stage 'Run node tests'
   //sh("docker run ${imageTag} node test")
   stage 'Skipping node tests'
@@ -24,3 +31,5 @@ node {
   }
   
 }
+
+

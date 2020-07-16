@@ -39,6 +39,7 @@ spec:
 """
 }
   }
+
   stages {
     stage('Test') {
       steps {
@@ -78,6 +79,7 @@ spec:
   sh("kubectl --namespace=${nameSpace} apply -f k8s/${nameSpace}/")
   }
   
+}
 }
 
 

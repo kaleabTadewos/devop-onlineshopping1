@@ -10,11 +10,9 @@ node {
  // stage 'Build image'
  // sh("docker build -t ${imageTag} .")
   stage('Build and push image with Container Builder') {
-      steps {
         container('gcloud') {
           sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         }
-      }
     }
   stage 'Run node tests'
   //sh("docker run ${imageTag} node test")

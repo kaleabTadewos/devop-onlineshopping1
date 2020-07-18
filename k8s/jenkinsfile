@@ -14,7 +14,11 @@ node {
   //sh("docker run ${imageTag} node test")
   stage 'Skipping node tests'
   stage 'Push image to registry'
-  sh("gcloud docker -- push ${imageTag}")
+  withEnv(['GCLOUD_PATH=/var/jenkins_home/google-cloud-sdk/bin']) {
+                sh("gcloud docker -- push ${imageTag}")
+  }
+
+  //sh("gcloud docker -- push ${imageTag}")
   stage "Deploy Application"
   sh("kubectl get ns onlineshopping || kubectl create ns onlineshopping")
   sh("sed -i.bak 's#gcr.io/gcr-project/sample:1.0.0#${imageTag}#' ./k8s/${nameSpace}/*.yaml")

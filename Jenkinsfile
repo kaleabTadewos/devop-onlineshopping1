@@ -9,7 +9,7 @@ node {
   
   checkout scm
   
-withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+withCredentials([file(credentialsId: 'e689f1578004ea39a27986aae88624aaf6c2aa68', variable: 'GC_KEY')]) {
     sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
     sh("gcloud container clusters get-credentials $cluster --zone $region --project $project")
   }

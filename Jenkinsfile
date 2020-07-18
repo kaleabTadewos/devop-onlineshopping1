@@ -3,11 +3,14 @@ node {
   def appName = 'onlineshopping-service'
   def nameSpace='onlineshopping'
   def cluster='onlineshopping-cluster'
-  def region='us-east1-d'
+  def region='us-west1-b'
   def feSvcName = "PROJECT-${appName}"
   def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.5"
   
   checkout scm
+  
+  sh("gcloud container clusters get-credentials $cluster --zone $region --project $project")
+
  // stage 'Build image'
   sh("docker build -t ${imageTag} .")
 
@@ -26,8 +29,8 @@ node {
   case "master":
   sh("kubectl get ns onlineshopping || kubectl create ns onlineshopping")
   sh("sed -i.bak 's#gcr.io/gcr-project/sample:1.0.0#${imageTag}#' ./k8s/${nameSpace}/*.yaml")
-  sh("kubectl --namespace=${nameSpace} apply -f ./k8s/services/")
-  sh("kubectl --namespace=${nameSpace} apply -f ./k8s/${nameSpace}/")
+  sh("kubectl --namespace=${nameSpace} apply -f ./k8s/services/ --validate=false")
+  sh("kubectl --namespace=${nameSpace} apply -f ./k8s/${nameSpace}/ --validate=false")
   }
   
 }

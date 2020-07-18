@@ -26,7 +26,7 @@ node {
   case "master":
   sh("kubectl get ns onlineshopping || kubectl create ns onlineshopping")
   sh("sed -i.bak 's#gcr.io/gcr-project/sample:1.0.0#${imageTag}#' ./k8s/${nameSpace}/*.yaml")
-  sh("kubectl --namespace=${nameSpace} apply -f ./k8s/services/")
+  sh("kubectl --namespace=${nameSpace} apply -f ./k8s/services/ --validate=false")
   sh("kubectl --namespace=${nameSpace} apply -f ./k8s/${nameSpace}/")
   }
   

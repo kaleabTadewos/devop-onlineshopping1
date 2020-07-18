@@ -9,7 +9,10 @@ node {
   
   checkout scm
   
-  sh("gcloud container clusters get-credentials $cluster --zone $region --project $project")
+withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+    sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
+    sh("gcloud container clusters get-credentials $cluster --zone $region --project $project")
+  }
 
  // stage 'Build image'
   sh("docker build -t ${imageTag} .")

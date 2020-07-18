@@ -16,11 +16,11 @@ node {
   stage 'Skipping node tests'
   stage 'Push image to registry'
 
-  withEnv(['GCLOUD_PATH=/var/jenkins_home/google-cloud-sdk/bin']) {
-                sh("gcloud docker -- push ${imageTag}")
-  }
+  // withEnv(['GCLOUD_PATH=/var/jenkins_home/google-cloud-sdk/bin']) {
+  //               sh("gcloud docker -- push ${imageTag}")
+  // }
 
-  //sh("gcloud docker -- push ${imageTag}")
+  sh("gcloud docker -- push ${imageTag}")
   stage "Deploy Application"
   switch (env.BRANCH_NAME) {
   case "master":
